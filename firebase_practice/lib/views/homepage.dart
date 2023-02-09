@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_practice/views/next_page.dart';
 import 'package:flutter/material.dart';
 import 'dart:async'; // new
 
@@ -22,6 +23,12 @@ class _HomePageState extends State<HomePage> {
     return qn.docs;
   }
 
+  Future getAnotherData() async {
+    var fireStore = FirebaseFirestore.instance;
+    QuerySnapshot qn1 = await fireStore.collection("Flower").get();
+    return qn1.docs;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -42,8 +49,16 @@ class _HomePageState extends State<HomePage> {
                 itemBuilder: ((context, index) {
                   DocumentSnapshot documentSnapshot = snapshot.data[index];
                   return Card(
-                    child: ListTile(
-                      title: Text(documentSnapshot["Name"]),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: ((context) => const AnotherPage())));
+                      },
+                      child: ListTile(
+                        title: Text(documentSnapshot["Name"]),
+                      ),
                     ),
                   );
                 }));
